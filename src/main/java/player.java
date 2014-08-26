@@ -4,6 +4,7 @@ import java.io.FileReader;
 import java.io.BufferedReader;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Map.Entry;
 
 
 public class player {
@@ -22,6 +23,8 @@ public class player {
 	double upw;
 	double mw;
 	
+	HashMap<String,CacheEntry> cache;
+	
 	public static void main(String[] args) {
 		player x = new player();
 		System.out.println(x.possible("ASDFGASDFGASDFGASDFGASDFG").size()  );
@@ -36,6 +39,7 @@ public class player {
 		this.dpw = dpw;
 		this.upw = upw;
 		this.mw = mw;
+		this.cache = new HashMap<String,CacheEntry>();
 		try {
 			BufferedReader wordFile;
 			if (dict == 'A') {
@@ -100,8 +104,47 @@ public class player {
             }
         }
         
+        int max = -1;
+        int x;
+        for (Entry<Character, Integer> pair: letterdict.entrySet()) {
+        	x = pair.getValue();
+        	if (x>max) {
+        		max = x;
+        	}
+        }
+        HashMap<Character, Double> letterdict2 = new HashMap<Character, Double>();
+        for (Entry<Character, Integer> pair: letterdict.entrySet()) {
+        	x = pair.getValue();
+        	letterdict2.put(pair.getKey(), x/(double)max);
+        }
+        for (int i=0; i<25; i++) {
+        	char l = letters.charAt(i);
+        	if (!letterdict2.containsKey(l)) {
+        		letterdict2.put(l, 0.);
+        	}
+        }
         
+        Double[] d = new Double[25];
+        
+        
+        for (int i=0; i<25; i++) {
+        	
+        }
         
 		return found;
 	}
 }
+
+class CacheEntry {
+	public ArrayList<String> found;
+	public ArrayList<String> played;
+	public Double[] d;
+	public Double[] u;
+	public CacheEntry(ArrayList<String> found, ArrayList<String> played, Double[] d,Double[] u) {
+		this.found = found;
+		this.played = played;
+		this.d = d;
+		this.u = u;
+	}
+}
+
