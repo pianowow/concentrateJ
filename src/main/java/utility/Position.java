@@ -7,6 +7,8 @@ import java.util.HashMap;
  * @author Chris Irwin
  */
 public class Position {
+	
+	// stores the constants for the neighbors of any given square
 	private static final HashMap<Integer,Integer> neighbors;
 	static { 
 		neighbors = new HashMap<Integer,Integer>();
@@ -119,13 +121,16 @@ public class Position {
         }
 	}
 	
+	@Override
 	public Position clone() {
 		return new Position(blue, red); 
 	}
 	
+	@Override
 	public String toString() {
 		return Integer.toString(blue) + "," + Integer.toString(red); 
 	}
+	
 	public String toColors() {
         String s = "";
         for (int i=0; i<25; i++) {
