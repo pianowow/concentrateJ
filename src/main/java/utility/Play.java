@@ -11,7 +11,11 @@ public class Play {
 		this.position = p;
 		this.move = move;
 	}
+	public Play() {
+		this(0,"",new Position(), 0);
+	}
 	public String toString() {
 		return Double.toString(score) + "," + word + "," + position;
 	}
+	
 }
