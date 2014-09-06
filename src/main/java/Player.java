@@ -113,9 +113,9 @@ public class Player {
 	 * purpose is to find words playable on a letterpress board
 	 * Also computes values used by evaluatePos in determining the worth of a letter
 	 */
-	private ArrayList<String> possible(String letters) {
+	public ArrayList<String> possible(String letters) {
 		if (cache.containsKey(letters)) {
-			ArrayList<String> found = cache.get(letters).found;
+			ArrayList<String> found = new ArrayList<String>(cache.get(letters).found);
 			int i;
 			for (String word: cache.get(letters).played) {
 				i = found.indexOf(word);
@@ -262,10 +262,11 @@ public class Player {
 						good = false;
 						break;
 					}
-					if (good) {
-						needLetterList.add(word);
-					}
 				}
+				if (good) {
+					needLetterList.add(word);
+				}
+				
 			}
 		}
 		else {
@@ -337,9 +338,11 @@ public class Player {
 			boolean good = true;
 			int len1 = word1.length();
 			for (String word2: cache.get(allLetters).played) {
-				if (word2.substring(0,len1).equals(word1)) {
-					good = false;
-					break;
+				if (word2.length() > len1) {
+					if (word2.substring(0,len1).equals(word1)) {
+						good = false;
+						break;
+					}
 				}
 			}
 			if (good) {
@@ -796,9 +799,9 @@ public class Player {
 				}
 			}
 		}
-		if (goal > 0) {
-			System.out.println("goal: "+notLetters + ' ' + Integer.toBinaryString(goal));
-		}
+//		if (goal > 0) {
+//			System.out.println("goal: "+notLetters + ' ' + Integer.toBinaryString(goal));
+//		}
 		//get the list of words and group them
 		ArrayList<String> words = concentrate(letters, needLetters, notLetters, anyl);
 		HashMap<String, ArrayList<String>> wordGroups = groupWords(words,anyl);		
@@ -899,7 +902,7 @@ public class Player {
 	 * @return -1 for losing, 1 for ending soon, 0 for not ending soon
 	 * 
 	 */
-	private int endgameCheck(String letters, Position p, int move) {
+	public int endgameCheck(String letters, Position p, int move) {
 		String unclaimedLetters = "";
 		int unclaimed = p.getUnclaimed();
 		String anyl = "";
@@ -923,6 +926,7 @@ public class Player {
 				gameEndingWords = cache.get(letters+unclaimedLetters).found;
 			} else {
 				gameEndingWords = concentrate(letters,unclaimedLetters,"","");
+				cache.put(letters+unclaimedLetters, new CacheEntry(gameEndingWords));
 			}
 			Set<String> endingGroups = groupWords(gameEndingWords,anyl).keySet();
 			for (String group: endingGroups) {
@@ -934,17 +938,19 @@ public class Player {
 							return -1;
 						}
 					}
-					return 1;
 				} else {
 					for (double score : scores.values()) {
 						if (score >= 1000) {
 							return -1;
 						}
 					}
-					return 1;
 				}
 			}
-			return 0;
+			if (gameEndingWords.size() > 0) {
+				return 1;
+			} else {
+				return 0;
+			}
 		} else {
 			return 1;
 		}
@@ -976,7 +982,8 @@ public class Player {
 		} else {
 			Collections.sort(plays, new ComparePlay(move));
 			int result;
-			for (int i=0; i<plays.size(); i++) {
+			int max = (plays.size() > 1000) ? 1000 : plays.size();
+			for (int i=0; i<max; i++) {
 				Play play = plays.get(i);
 				result = endgameCheck(letters, play.position, move);
 				if (result >= 0) {
