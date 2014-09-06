@@ -5,4 +5,8 @@ public class PlayerBeta extends Player {
 		super();
 		name = "Beta";
 	}
+	public PlayerBeta(char dict, int maxWordLen, boolean sort) {
+		super(dict, maxWordLen, sort);
+		name = "Beta";
+	}
 }
