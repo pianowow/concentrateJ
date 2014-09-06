@@ -1,10 +1,15 @@
 package main.java.utility;
 
+import java.text.DecimalFormat;
 import java.util.HashMap;
 
 /**
  * holds a position for the board colors
  * @author Chris Irwin
+ */
+/**
+ * @author CHRISTOPHER_IRWIN
+ *
  */
 public class Position {
 	
@@ -40,8 +45,8 @@ public class Position {
 	}
 	public int blue;
 	public int red;
-	public int getUnclaimed() {
-		return ~(blue|red);  
+	public int getUnclaimed()  {
+		return ~(blue|red) % 33554432;  // this is mod 2**25, for some reason this was returning values greater than 2**25
 	}
 	public Position(int blue,int red) {
 		this.blue = blue;
@@ -52,6 +57,7 @@ public class Position {
 		int i = 0;
 		String digits = "0123456789";
 		char prevchar = 'W';
+		colors = colors.toUpperCase();
 		for (int n=0; n<colors.length(); n++) {
 			char c = colors.charAt(n);
 			if (c == 'B') {
@@ -170,4 +176,52 @@ public class Position {
 	public int hashCode() {
 		return this.toString().hashCode();
 	}
+	
+	
+	/**
+	 * @return String displaying the number of tiles occupied and defended for each color, used by Arena
+	 */
+	public String numScore() {
+		String colors = toColors();
+		int blueCount = 0;
+		int redCount = 0;
+		int blueDefCount = 0;
+		int redDefCount = 0;
+		for (int i=0; i<colors.length(); i++) {
+			char l = colors.charAt(i);
+			switch (l) {
+				case 'B': 	blueDefCount++;
+				case 'b':	blueCount++;
+							break;
+				case 'R':	redDefCount++;
+				case 'r':	redCount++;
+							break;
+			}
+		}
+		DecimalFormat two = new DecimalFormat("00");
+		return "blue: " + two.format(blueCount) + "(" + two.format(blueDefCount) + ") red: " + two.format(redCount) + "(" + two.format(redDefCount) + ")";
+	}
+	
+	public int blueCount() {
+		String blueStr = Integer.toBinaryString(blue);
+		int blueCount = 0;
+		for (int x=0; x<blueStr.length(); x++) {
+			if (blueStr.charAt(x) == '1') {
+				blueCount++;
+			}
+		}
+		return blueCount;
+	}
+
+	public int redCount() {
+		String redStr = Integer.toBinaryString(red);
+		int redCount = 0;
+		for (int x=0; x<redStr.length(); x++) {
+			if (redStr.charAt(x) == '1') {
+				redCount++;
+			}
+		}
+		return redCount;
+	}
+
 }
