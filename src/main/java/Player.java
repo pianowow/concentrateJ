@@ -670,7 +670,7 @@ public class Player {
 	    return combos;
 	}
 
-	private Comparator<String> lengthAscending = new Comparator<String>() {
+	private class lengthAscending implements Comparator<String> {
 		@Override
 		public int compare(String o1, String o2) {
 			return Integer.compare(o1.length(), o2.length());
@@ -690,7 +690,7 @@ public class Player {
 			}
 		}
 		group = newGroup;
-		Collections.sort(group,lengthAscending);
+		Collections.sort(group,new lengthAscending());
 		HashMap<String,Integer> category = new HashMap<String,Integer>();
 		HashSet<String> children = new HashSet<String>();
 		for (int i=0; i<group.size(); i++) {
@@ -707,7 +707,7 @@ public class Player {
 				}
 				if (myChildren.size() > 0) {
 					boolean dubble = true;
-					Collections.sort(myChildren,lengthAscending);
+					Collections.sort(myChildren,new lengthAscending());
 					for (int m=0; m<myChildren.size()-1; m++) {
 						String child1 = myChildren.get(m);
 						int cl = child1.length();
