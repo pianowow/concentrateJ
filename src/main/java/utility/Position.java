@@ -134,7 +134,8 @@ public class Position {
 	
 	@Override
 	public String toString() {
-		return Integer.toString(blue) + "," + Integer.toString(red); 
+		//return Integer.toString(blue) + "," + Integer.toString(red); 
+		return toColors();
 	}
 	
 	public String toColors() {
