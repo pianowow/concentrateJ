@@ -98,9 +98,6 @@ public class Player {
 
 	/**
 	 * This constructor creates the player at maximum difficulty
-	 * @param dict Difficulty setting, 'A' for all words, 'R' for reduced list of words
-	 * @param maxWordLen Difficulty setting, used to limit the length of words searched for
-	 * @param random Difficulty setting, whether or not to sort the words when choosing one to play
 	 */
 	public Player() {
 		this('A',25,false,3.1,1.0,1.28,2.29,7.78);
@@ -119,7 +116,8 @@ public class Player {
 			int i;
 			for (String word: cache.get(letters).played) {
 				i = found.indexOf(word);
-				found.remove(i);
+				if (i>=0) 
+					found.remove(i);
 			}
 			return found;
 		} else {
@@ -961,6 +959,9 @@ public class Player {
     }
 
     public void resetPlayed(String letters, ArrayList<String> words) {
+    	if (! cache.containsKey(letters)) {
+    		possible(letters);
+    	}
         cache.get(letters).played = words;
     }
 
